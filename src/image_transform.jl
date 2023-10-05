@@ -1,71 +1,95 @@
 using Images
 using FileIO
-using ImageCore, TestImages
-using Noise
-using ImageFiltering
-using FFTW
+
 using Plots
 using Statistics
-using DSP
-using PlutoUI
 using LinearAlgebra
 
 
-img = FileIO.load("img.png")
+# using ImageCore, TestImages
+# using Noise
+# using ImageFiltering
+# using FFTW
+# using DSP
+
+
+img = FileIO.load("images/flag.png")
 gray_img=Gray.(img)
-M=Float64.(gray_img)
+M = Float64.(gray_img)
 
+i1, i2 = size(M)
 
-i, j = size(M)
+sample_rate = 9;
+M = M[1:sample_rate:i1,1:sample_rate:i2]
 
-s = 5;
+Gray.(M)
 
-M1 = M[1:5:i,1:5:j]
-
-Gray.(M1)
-
-function kernel(x,y, σ)
+# function gauss_kernel(σ)
+#        ker(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
+#     return ker
    
-    ker=(1/(2π * σ))*exp(- x^2 / σ^2 - y^2 / σ^2)
-   
-    return ker
-   
+# end
+
+const σ = 0.0
+
+kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
+
+
+kernel(x,y) = exp(- x^2 / (2.0)^2 - y^2 / (2.0)^2)
+
+img_size = size(M)
+
+A = zeros(img_size[1],img_size[2],img_size[1],img_size[2])
+
+for i in CartesianIndices(A)
+    A[i] = kernel(i[1]-i[3],i[2]-i[4])
 end
 
+l1 =  Int(round(img_size[1]/2))
+l2 =  Int(round(img_size[2]/2))
 
-img_size=size(M1)
+sumkernal = sum(kernel(x,y) for x in -l1:l1, y in -l2:l2)
 
-A=zeros(img_size[1],img_size[2],img_size[1],img_size[2])
+A = reshape(A,length(M),length(M)) ./ sumkernal
 
-for i in range img_size[1]
-   
-    for j in range img_size[2]
-       
-        for m in range img_size[1]
-           
-            for n in range img_size[2]
-               
-                A[i,j,m,n]=kernel(i-m,j-n,10)
-               
-            end
-        end
-    end
-end
+ϵ = 0.01
+v = A * M[:] + ϵ .* randn(length(M))
+# v = A * M[:] 
 
-g=zeros(img_size[1],img_size[2])  
+Mtrans = reshape(v,img_size...)
+
+Gray.(Mtrans)
+
+# invA = inv(A)
+
+# the obvious solution is
+vsol = A \ v
+norm(A * vsol - v) / norm(v)
+
+Msol = reshape(vsol, img_size...);
+
+Gray.(Msol)
 
 
-for i in range img_size[1]
-   
-    for j in range img_size[2]
-       
-        for m in range img_size[1]
-           
-            for n in range img_size[2]
-               g[i,j]=g[i,j]+A[i,j,m,n]*M1[m,n]
-               
-               
-            end
-        end
-    end
-end
+svdA = svd(A)
+plot(svdA.S)
+
+inds = findall(svdA.S .> ϵ)
+
+Astable = svdA.U[:,inds] * Diagonal(svdA.S[inds]) * svdA.Vt[inds,:]
+norm(Astable - A) / norm(A)
+
+Ainv_stable = transpose(svdA.Vt[inds,:]) * Diagonal(1 ./ svdA.S[inds]) * transpose(svdA.U[:,inds])
+
+norm(Ainv_stable * A - I) / length(A)
+norm(A * Ainv_stable - I) / length(A)
+
+
+vsol = Ainv_stable * v
+norm(A * vsol - v) / norm(v)
+
+Msol = reshape(vsol, img_size...);
+
+Gray.(Msol)
+
+
