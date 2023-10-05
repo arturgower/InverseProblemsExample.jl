@@ -1,0 +1,13 @@
+name = "InverseProblemsExample"
+uuid = "4a8388c1-7488-4260-a011-569a1659cd17"
+authors = ["Art Gower"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
