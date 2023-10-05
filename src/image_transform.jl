@@ -58,7 +58,10 @@ v = A * M[:] + ϵ .* randn(length(M))
 
 Mtrans = reshape(v,img_size...)
 
-Gray.(Mtrans)
+
+plot(Gray.(Mtrans))
+savefig("images/blur-flag.png")
+
 
 # invA = inv(A)
 
@@ -74,7 +77,7 @@ Gray.(Msol)
 svdA = svd(A)
 plot(svdA.S)
 
-inds = findall(svdA.S .> ϵ)
+inds = findall(svdA.S .> 5ϵ)
 
 Astable = svdA.U[:,inds] * Diagonal(svdA.S[inds]) * svdA.Vt[inds,:]
 norm(Astable - A) / norm(A)
@@ -92,4 +95,5 @@ Msol = reshape(vsol, img_size...);
 
 Gray.(Msol)
 
-
+plot(Gray.(Msol))
+# savefig("images/recover-svd-flag.png")
