@@ -169,7 +169,7 @@ using LinearAlgebra
 
     # Tikinov reg 
 
-    vsol = [A; sqrt(ϵ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]  
+    vsol = [A; sqrt(0.4ϵ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]  
      
     norm(A * vsol - v) / norm(v)
 
@@ -179,7 +179,14 @@ using LinearAlgebra
         xlab = "", ylab = "", 
         frame = :none
     )
+     
     savefig("images/recover-tiki-masks.png")    
+
+    # plot(Gray.(Mtrans), axis = false, 
+    #     xlab = "", ylab = "", 
+    #     frame = :none
+    # )
+   
 
     # # SVD inversion
 
