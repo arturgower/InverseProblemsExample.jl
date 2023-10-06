@@ -36,9 +36,9 @@ using LinearAlgebra
 
     # savefig("images/small-flag.png", size = (53,80))
 
-    const σ = 0.0
+    # const σ = 0.0
 
-    kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
+    # kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
 
     kernel(x,y) = exp(- x^2 / (2.0)^2 - y^2 / (2.0)^2)
 
