@@ -4,6 +4,7 @@ using Plots
 using NumericalIntegration
 using Random
 using SpecialFunctions
+using NumericalIntegration
 
 #Prior choice
 log_normal = 0
@@ -16,7 +17,7 @@ amin = amax/Na
 a = LinRange(amin, amax, Na)
 
 Ny = 200
-ymax = 5.0
+ymax = 20.0
 y = LinRange(-ymax, ymax, Ny)
 y_star = 2*ymax*(rand() - 0.5)
 
@@ -42,20 +43,18 @@ end
 
 ω = 1.0
 host_medium = Acoustic(1.0, 1.0, 2)
-cylinder_medium = Acoustic(0.01, 0.01, 2)
+cylinder_medium = Acoustic(Inf, Inf + 0.0im, 2)
 cylinder_shape = Circle(a_star)
 cylinder = Particle(cylinder_medium, cylinder_shape)
 
 T = diag(t_matrix(cylinder, host_medium, ω, order))
-coefs = [complex(0.0, 1.0)^n for n in -order:order]
-vec = T .* coefs
 matrix = zeros(Complex, 2*order+1, 2*order+1)
 for n in -order:order
     for m in -order:order
         matrix[n + order+1, m + order+1] = besselj(n-m, ω*y_star)*complex(0.0, 1.0)^(n-m)
     end
 end
-f = abs(sum(matrix * vec))
+f = abs(sum(matrix * T))
 f = log(f + (rand() - 0.5) * (f / 50))
 
 h = zeros(length(a), length(y))
@@ -63,15 +62,13 @@ for i in 1:length(a)
     for j in 1:length(y)
         cyl = Particle(cylinder_medium, Circle(a[i]))
         T = diag(t_matrix(cyl, host_medium, ω, order))
-        coefs = [complex(0.0, 1.0)^n for n in -order:order]
-        vec = T .* coefs
         matrix = zeros(Complex, 2*order+1, 2*order+1)
         for n in -order:order
             for m in -order:order
                 matrix[n + order+1, m + order+1] = besselj(n-m, ω*y[j])*complex(0.0, 1.0)^(n-m)
             end
         end
-        h[i, j] = log(abs(sum(matrix * vec)))
+        h[i, j] = log(abs(sum(matrix * T)))
     end
 end
 
@@ -84,8 +81,8 @@ likelihood = gauss_2 ./ integrate(a, gauss_2)
 plot(a, likelihood)
 
 mult = prior .* likelihood
-conf = integrate(a, mult)
-posterior = mult ./ conf
+evidence = integrate(a, mult)
+posterior = mult ./ evidence
 
 prior_mean = integrate(a, prior .* a)
 mean_likelihood = integrate(a, likelihood .* a)

@@ -3,6 +3,7 @@ using LinearAlgebra
 using Plots
 using NumericalIntegration
 using Random
+using NumericalIntegration
 
 #Prior choice
 log_normal = 0
@@ -49,21 +50,19 @@ end
 
 ω = 1.0
 host_medium = Acoustic(1.0, 1.0, 2)
-cylinder_medium = Acoustic(0.01, 0.01, 2)
+cylinder_medium = Acoustic(Inf, Inf + 0.0im, 2)
 cylinder_shape = Circle(a_star)
 cylinder = Particle(cylinder_medium, cylinder_shape)
 
 T = diag(t_matrix(cylinder, host_medium, ω, order))
-coefs = [complex(0.0, 1.0)^n for n in -order:order]
-f = abs(sum(T .* coefs))
+f = abs(sum(T))
 f = log(f + (rand() - 0.5) * (f / 50))
 
 g = zeros(length(a))
 for i in 1:length(a)
     cyl = Particle(cylinder_medium, Circle(a[i]))
     T = diag(t_matrix(cyl, host_medium, ω, order))
-    coefs = [complex(0.0, 1.0)^n for n in -order:order]
-    g[i] = log(abs(sum(T .* coefs)))
+    g[i] = log(abs(sum(T)))
 end
 
 gauss = exp.(-(g .- f).^2 ./ σf^2)
@@ -71,8 +70,8 @@ likelihood = gauss ./ integrate(a, gauss)
 plot(a, likelihood)
 
 mult = prior .* likelihood
-conf = integrate(a, mult)
-posterior = mult ./ conf
+evidence = integrate(a, mult)
+posterior = mult ./ evidence
 
 prior_mean = integrate(a, prior .* a)
 mean_likelihood = integrate(a, likelihood .* a)
