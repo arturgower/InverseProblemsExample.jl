@@ -4,6 +4,7 @@ using Plots
 using NumericalIntegration
 using Random
 using SpecialFunctions
+using NumericalIntegration
 
 #Prior choice
 log_normal = 0

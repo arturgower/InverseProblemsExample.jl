@@ -3,6 +3,7 @@ using LinearAlgebra
 using Plots
 using NumericalIntegration
 using Random
+using NumericalIntegration
 
 #Prior choice
 log_normal = 0
