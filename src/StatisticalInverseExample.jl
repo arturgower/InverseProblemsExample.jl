@@ -5,35 +5,27 @@ using NumericalIntegration
 using Random
 using NumericalIntegration
 
-#Prior choice
-log_normal = 0
+#Prior choice: uniform or log-normal
+log_normal = 1
 
 a_star = (3 * rand()) + 0.5
 
-#omega = 1.0
+#Well-conditioned
+ω = 1.0
 
-#a_star = 1.75 
-#a_star = 7.0
-#a_star = 8.0
-#a_star = 0.1
-#a_star = 0.57
-
-#ω = 0.01
-
-#a_star = 1.85
-
-#ω = 50.0
+#Ill-conditioned
+#ω = 10.0
 
 Na = 400
 amax = 10.0
 amin = amax/Na
-μ = 0.5
-σ = 0.5
-σf = 0.01
+σf = 0.1
 order = 5
 a = LinRange(amin, amax, Na)
 
 if log_normal == 1
+    μ = 0.5
+    σ = 0.5
     ln = exp.(-(log.(a) .- μ).^2 ./ σ^2)
     prior = ln ./ integrate(a, ln)
     plot(a, prior)
@@ -48,7 +40,6 @@ else
     plot(a, prior)
 end
 
-ω = 1.0
 host_medium = Acoustic(1.0, 1.0, 2)
 cylinder_medium = Acoustic(Inf, Inf + 0.0im, 2)
 cylinder_shape = Circle(a_star)
@@ -83,16 +74,18 @@ max_posterior = a[findmax(posterior)[2]]
 var = square_mean - mean^2
 
 plot(a, likelihood, label = "Likelihood")
-vline!([a_star], label = "Real value")
+#vline!([a_star], label = "Real value")
 vline!([max_likelihood], label = "Maximum of likelihood")
 vline!([mean_likelihood], label = "Mean of likelihood")
 
 plot(a, posterior, label = "Posterior")
-vline!([a_star], label = "Real value")
+#vline!([a_star], label = "Real value")
 vline!([max_posterior], label = "Maximum of posterior")
 vline!([mean], label = "Mean of posterior")
 if log_normal == 0
     plot!(xlims = [0.0,4.0])
+    plot!(legend = :topleft)
 end
 
 #plot!(xlims = [6.0,8.0])
+
