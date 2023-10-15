@@ -11,7 +11,7 @@ pkg> add https://github.com/arturgower/InverseProblemsExample.jl
 ```
 If you want to contribute to this package then type
 ```julia
-pkg> dev InverseProblemsExample.jl
+pkg> dev InverseProblemsExample
 ```
 By default the package source will now be in \<your julia directory\>/dev/InverseProblemsExample. 
 
