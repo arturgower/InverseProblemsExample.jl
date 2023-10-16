@@ -45,6 +45,7 @@ using LinearAlgebra
     # const σ = 2.0
 
     # kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
+    # kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
 
     kernel(x,y) = exp(- x^2 / (2.0)^2 - y^2 / (2.0)^2)
 
@@ -142,11 +143,11 @@ using LinearAlgebra
 
     i1, i2 = size(M)
 
-    sample_rate = 20;
+    sample_rate = 15;
     M = M[1:sample_rate:i1,1:sample_rate:i2]
 
     # blur image 
-    kernel(x,y) = exp(- x^2 / (2.2)^2 - y^2 / (2.2)^2)
+    kernel(x,y) = exp(- x^2 / (2.6)^2 - y^2 / (2.6)^2)
 
     img_size = size(M)
 
