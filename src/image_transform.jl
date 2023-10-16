@@ -19,13 +19,19 @@ using LinearAlgebra
     M = Float64.(gray_img)
 
     i1, i2 = size(M)
-    sample_rate = 12;
-    M = M[1:sample_rate:i1,1:sample_rate:i2]
+    samples = 30;
+
+    inds1 = Int.(round.(collect(LinRange(1, i1, samples))))
+    inds2 = Int.(round.(collect(LinRange(1, i2, Int(round(samples * i2 / i1))))))
+    
+    M = M[inds1,inds2]
 
     plot(Gray.(M), axis = false, 
         xlab = "", ylab = "", 
         frame = :none
-    )    
+    ) 
+    
+    savefig("images/small-flag.png")
 
     # gr(size = (size(M)[2],size(M)[1]) .* 6)
     # plot(Gray.(M), xlims = (2,67), ylims = (2,44))
@@ -36,9 +42,9 @@ using LinearAlgebra
 
     # savefig("images/small-flag.png", size = (53,80))
 
-    const σ = 0.0
+    # const σ = 2.0
 
-    kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
+    # kernel(x,y) = (1/(2π * σ)) * exp(- x^2 / σ^2 - y^2 / σ^2)
 
     kernel(x,y) = exp(- x^2 / (2.0)^2 - y^2 / (2.0)^2)
 
