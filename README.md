@@ -107,10 +107,12 @@ plot(Gray.(Msol), axis = false,
 ![The deblurred flag](images/recover-tiki-flag.png)
 
 Which we can now compare the blurred flag:
+
 ![The deblurred flag](images/blur-flag.png)
 
 
 and the original flag:
+
 ![The deblurred flag](images/small-flag.png)
 
 ## References

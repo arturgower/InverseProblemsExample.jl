@@ -72,7 +72,7 @@ using LinearAlgebra
 
         plot(Gray.(Msol), axis = false, 
             xlab = "", ylab = "", 
-            frame = :none, title = "δ ≈ $(round(1000δ)/1000)"
+            frame = :none, title = "δ ≈ $(round(2e4δ)/(2e2))x 10^-2"
         )
     end
 

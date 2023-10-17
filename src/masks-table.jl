@@ -52,7 +52,7 @@ using LinearAlgebra
         frame = :none
     )    
     # savefig("images/blur-total-flag.png")
-    # savefig("images/blur-flag.png")
+    # savefig("images/blur-masks.png")
 
 
     # Tikinov regulariser
@@ -82,22 +82,22 @@ using LinearAlgebra
     plot(ps...)
     savefig("images/tikh-table-masks.png")
 
-    δs = [[1e-6,2e-6, 3e-6, 5e-6,1e-5,5e-5]; 0.001:0.002:0.015] |> collect
-    errors = map(δs) do δ
-        vsol = [A; sqrt(δ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]
+    # δs = [[1e-6,2e-6, 3e-6, 5e-6,1e-5,5e-5]; 0.001:0.002:0.015] |> collect
+    # errors = map(δs) do δ
+    #     vsol = [A; sqrt(δ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]
     
-        # vsol = (A + sqrt(20ϵ) * I) \ v; 
-        norm(A * vsol - v) 
-    end
+    #     # vsol = (A + sqrt(20ϵ) * I) \ v; 
+    #     norm(A * vsol - v) 
+    # end
 
-    using LaTeXStrings
-    gr(size = (200 * 1.6,200 ))
-    plot(δs, errors, linewidth = 2.0, 
-        label = L"\|A x_\delta - y \|", 
-        ylab = "", xlab = L"\delta"
-    )
+    # using LaTeXStrings
+    # gr(size = (200 * 1.6,200 ))
+    # plot(δs, errors, linewidth = 2.0, 
+    #     label = L"\|A x_\delta - y \|", 
+    #     ylab = "", xlab = L"\delta"
+    # )
     
-    error = norm(ϵ .* randn(length(M)))
+    # error = norm(ϵ .* randn(length(M)))
 
-    plot!([0.0,maximum(δs)],[error,error], lab = L"\varepsilon")
-    savefig("images/tikh-delta.pdf")
+    # plot!([0.0,maximum(δs)],[error,error], lab = L"\varepsilon")
+    # savefig("images/tikh-delta.pdf")
