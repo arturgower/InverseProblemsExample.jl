@@ -5,14 +5,6 @@ using Plots
 using Statistics
 using LinearAlgebra
 
-
-# using ImageCore, TestImages
-# using Noise
-# using ImageFiltering
-# using FFTW
-# using DSP
-
-
 ## Flag example
     img = FileIO.load("images/flag.png")
     gray_img = Gray.(img)
@@ -69,6 +61,7 @@ using LinearAlgebra
 
     δ = ϵ
     δs = [5e-6, 5e-3, 5e-2, 1e-2, 0.05,0.1, 0.2,0.4, 0.6]
+    δs = [5e-6, 1e-4, 2e-4, 1e-3, 5e-3, 1e-2, 5e-2, 0.1, 0.4]
     ps = map(δs) do δ
         vsol = [A; sqrt(δ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]
     
@@ -97,7 +90,7 @@ using LinearAlgebra
     end
 
     using LaTeXStrings
-    gr(size = (300 * 1.6,300 ))
+    gr(size = (200 * 1.6,200 ))
     plot(δs, errors, linewidth = 2.0, 
         label = L"\|A x_\delta - y \|", 
         ylab = "", xlab = L"\delta"
@@ -106,3 +99,4 @@ using LinearAlgebra
     error = norm(ϵ .* randn(length(M)))
 
     plot!([0.0,maximum(δs)],[error,error], lab = L"\varepsilon")
+    savefig("images/tikh-delta.pdf")
