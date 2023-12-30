@@ -74,6 +74,7 @@ using LinearAlgebra
         xlab = "", ylab = "", 
         frame = :none
     )    
+    # savefig("images/blur-total-flag.png")
     savefig("images/blur-flag.png")
 
     # invA = inv(A)
@@ -119,7 +120,8 @@ using LinearAlgebra
 
 
     # Tikinov regulariser
-    vsol = [A; sqrt(ϵ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]
+    δ = ϵ
+    vsol = [A; sqrt(δ) * diagm(ones(Float64,size(A)[2]))] \ [v; zeros(size(A)[2])]
     
     # vsol = (A + sqrt(20ϵ) * I) \ v; 
     norm(A * vsol - v) / norm(v)
